@@ -1,4 +1,5 @@
 The first part of this assignment invloves data analysis of climate using SQLAlchemy and Python. In the second part APIs are created to display the results of queries from first part.
+
 [Input]
 
 SQLite file that consists of two tables measurement and stations.
