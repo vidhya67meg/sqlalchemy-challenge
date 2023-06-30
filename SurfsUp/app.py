@@ -16,15 +16,14 @@ engine = create_engine("sqlite:///SurfsUp/Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
 Base = automap_base()
+
 # reflect the tables
 Base.prepare(autoload_with=engine)
-
 print(Base.classes.keys())
+
 # Save references to each table
 Measurement = Base.classes.measurement
 Station = Base.classes.station
-
-# Create our session (link) from Python to the DB
 
 
 #################################################
@@ -79,16 +78,16 @@ def prcp():
 
     return jsonify(prcp_last)
 
-@app.route("/api/v1.0/stations")
-def stations():
+  @app.route("/api/v1.0/stations")
+  def stations():
     #Return a JSON list of stations from the dataset
     session = Session(engine)
     stations = session.query(Station.station).all()
     station_list = list(np.ravel(stations))
     return jsonify(station_list)
     session.close()
-@app.route("/api/v1.0/tobs")
-def tobs():
+ @app.route("/api/v1.0/tobs")
+ def tobs():
     #Query the dates and temperature observations of the most-active station for 
     #the previous year of data
     session = Session(engine)
@@ -102,10 +101,11 @@ def tobs():
     session.close()
     temp_list = list(np.ravel(result))
     return jsonify(temp_list)
-    
-    
-@app.route("/api/v1.0/<start>")
-def from_start(start):
+
+  #Return a JSON list of the minimum temperature, the average temperature, and the maximum temperature 
+  #for a specified start or start-end range
+  @app.route("/api/v1.0/<start>")
+  def from_start(start):
     session = Session(engine)
     result = session.query(func.min(Measurement.tobs),
                           func.max(Measurement.tobs),
@@ -124,8 +124,8 @@ def from_start(start):
 
     return jsonify(temp_dict)
     
-@app.route("/api/v1.0/<start>/<end>")
-def from_start_end(start,end):
+  @app.route("/api/v1.0/<start>/<end>")
+  def from_start_end(start,end):
     session = Session(engine)
     result = session.query(func.min(Measurement.tobs),
                           func.max(Measurement.tobs),
@@ -145,5 +145,5 @@ def from_start_end(start,end):
 
     return jsonify(temp_dict_end)
 
-if __name__ == "__main__":
+  if __name__ == "__main__":
     app.run(debug=True)
